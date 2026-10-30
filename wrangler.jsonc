@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "google-ads-mcp",
+  "main": "src/index.js",
+  "compatibility_date": "2025-09-01",
+  "workers_dev": true,
+  "observability": { "enabled": true },
+  "kv_namespaces": [
+    { "binding": "OAUTH_KV", "id": "467eef7999924bbe8d883e7bb3f73190" }
+  ],
+  "vars": {
+    "ALLOWED_EMAILS": "mastergaia2323@gmail.com",
+    "ALLOWED_REDIRECT_HOSTS": "claude.ai,claude.com",
+    "ADS_API_VERSION": "v26",
+    "LOGIN_CUSTOMER_ID": ""
+  }
+  // Segredos (configurar no painel da Cloudflare, em Configurações > Variáveis e segredos):
+  //   GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, ENCRYPTION_KEY
+}
