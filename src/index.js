@@ -867,6 +867,21 @@ export default {
       if (path === "/token" && request.method === "POST") return handleToken(request, env);
       if (path === "/revoke" && request.method === "POST") return handleRevoke(request, env);
       if (path === "/mcp" || path === "/sse") return handleMcp(request, env, origin);
+      if (path === "/status" && request.method === "GET") {
+        const ok = (v, min = 1) => (typeof v === "string" && v.trim().length >= min ? "✅ configurado" : "❌ faltando");
+        const kv = env.OAUTH_KV ? "✅ ligado" : "❌ faltando";
+        const rows = [
+          ["GOOGLE_CLIENT_ID", ok(env.GOOGLE_CLIENT_ID, 10) + (env.GOOGLE_CLIENT_ID && !env.GOOGLE_CLIENT_ID.trim().endsWith(".apps.googleusercontent.com") ? " (⚠️ formato estranho)" : "")],
+          ["GOOGLE_CLIENT_SECRET", ok(env.GOOGLE_CLIENT_SECRET, 10)],
+          ["ENCRYPTION_KEY", ok(env.ENCRYPTION_KEY, 16)],
+          ["OAUTH_KV", kv],
+          ["ALLOWED_EMAILS", escapeHtml(env.ALLOWED_EMAILS || "❌ vazio")],
+          ["ADS_API_VERSION", escapeHtml(env.ADS_API_VERSION || "v26")],
+          ["URI de redirecionamento (Google)", `<code>${escapeHtml(origin)}/callback</code>`],
+          ["URL do conector (Claude)", `<code>${escapeHtml(origin)}/mcp</code>`],
+        ];
+        return html(`<h2>Verificação da configuração</h2><table cellpadding="6">${rows.map(([k, v]) => `<tr><td><b>${k}</b></td><td>${v}</td></tr>`).join("")}</table>`);
+      }
       if (path === "/" && request.method === "GET") {
         return html(`<h2>Google Ads MCP</h2><p>Servidor ativo. No Claude, adicione um conector personalizado com o endereço:</p><p><code>${escapeHtml(origin)}/mcp</code></p>`);
       }
